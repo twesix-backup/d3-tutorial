@@ -9,32 +9,47 @@
 </head>
 <body>
 
-<svg width="500" height="500"></svg>
+<svg width="1000" height="1000"></svg>
 
 <script>
+    const width = 1000
+    const height = 1000
     const svg = d3.select('svg')
-    const circle1 = svg.append("circle")
-        .attr("cx", 100)
-        .attr("cy", 100)
-        .attr("r", 45)
-        .style("fill","green");
-    const circle2 = svg.append("circle")
-        .attr("cx", 100)
-        .attr("cy", 100)
-        .attr("r", 45)
-        .style("fill","green");
+    var color = d3.scale.category20()
 
-    //在1秒（1000毫秒）内将圆心坐标由100变为300
-    circle1.transition()
-        .duration(1000)
-        .attr("cx", 300);
+    var projection = d3.geo.mercator()
+        .center([107, 31])
+        .scale(850)
+        .translate([width/2, height/2]);
 
-    //在1.5秒（1500毫秒）内将圆心坐标由100变为300，
-    //将颜色从绿色变为红色
-    circle2.transition()
-        .duration(1500)
-        .attr("cy", 300)
-        .style("fill","red");
+    var path = d3.geo.path()
+        .projection(projection);
+
+    d3.json("../GeoJSON/china/china.geojson", function(error, root) {
+
+        if (error)
+            return console.error(error);
+        console.log(root.features);
+
+        svg.selectAll("path")
+            .data( root.features )
+            .enter()
+            .append("path")
+            .attr("stroke","#000")
+            .attr("stroke-width",1)
+            .attr("fill", function(d,i){
+                return color(i);
+            })
+            .attr("d", path )   //使用地理路径生成器
+            .on("mouseover",function(d,i){
+                d3.select(this)
+                    .attr("fill","yellow");
+            })
+            .on("mouseout",function(d,i){
+                d3.select(this)
+                    .attr("fill",color(i));
+            });
+    });
 </script>
 </body>
 </html>
