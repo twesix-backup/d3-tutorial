@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script src="https://cdn.bootcss.com/d3/4.12.0/d3.min.js"></script>
+
+</head>
+<body>
+
+<p>Apple</p>
+<p id="p2">Pear</p>
+<p>Banana</p>
+
+<script>
+    const body = d3.select('body')
+    let p = body.select('p')
+
+    p.style('color', 'red')
+
+    p = body.selectAll('p')
+    p.style('color', 'blue')
+
+    p = body.select('#p2')
+    p.style('color', 'green')
+
+    body.append("p")
+        .text("append p element")
+
+    body.insert("p","#p2") // insert before #p2
+        .text("insert p element")
+
+    p.remove()
+
+</script>
+</body>
+</html>
